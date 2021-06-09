@@ -8,8 +8,10 @@ from graphviz import Digraph
 g = Digraph('G', filename='c4.5.gv')
 # 声明一个全局字典来存储编号(列号)和节点的映射关系cnt => row
 cntToNode = {}
-rowToName = {'0': 'Outlook', '1': 'Temper.', '2': 'Humidity', '3': 'Windy'}
-nameToRow = {'Outlook': '0', 'Temper.': '1', 'Humidity': '2', 'Windy': '3'}
+# rowToName = {'0': 'Outlook', '1': 'Temper.', '2': 'Humidity', '3': 'Windy'}
+# nameToRow = {'Outlook': '0', 'Temper.': '1', 'Humidity': '2', 'Windy': '3'}
+rowToName = {}
+nameToRow = {}
 edgeVal = {}  # 存　u=>v 对应的边的值
 nodeVal = {}  # 存节点u对应的值
 # 一个节点需要存储的信息有它的邻接节点的编号列表
@@ -191,10 +193,17 @@ def add_edge(u, v, value):  # u ==> v 并且在边上写value
 
 
 def test():
-    root = create(read("mytrain.data"))
-    g.view()
-    # exam(root, read("mytest.data"))
+    dataSet = read("dna.data")
+    init(dataSet)
+    root = create(dataSet)
+    # g.view()
+    exam(root, read("dna.test"))
 
+def init(dataSet):
+    numAttr = len(dataSet[0]) - 1
+    for i in range(numAttr):
+        rowToName[str(i)] = str(i)
+        nameToRow[str(i)] = str(i)
 
 def exam(root, dataSet):  # 输入：决策树的根节点编号，测试集　输出：错误率
     # num = len(dataSet[0])
@@ -214,14 +223,15 @@ def not_ok(line, root):
     row = int(nameToRow[nodeVal[root]])
     while i < len(line):
         u = root
-        if len(dict[u]) == 0:
+        set = dict.get(u,{})
+        if len(set) == 0:
             label = nodeVal[u]
             if line[-1] == label:
-                return True
-            else:
                 return False
+            else:
+                return True
         for v in dict[u]:
-            tmp = str(u) + str(v)
+            tmp = str(u)+str(v)
             other = line[row]
             val = edgeVal[tmp]
 
@@ -231,14 +241,7 @@ def not_ok(line, root):
 
                 attr = nodeVal[v]
                 if isLabel(attr):
-                    label = line[-1]
-                    x = 0
-                    if attr == label:
-                        x = 1
-                        return False
-                    else:
-                        return True
-                    # return attr == line[-1]
+                    return attr != line[-1]
                 row = int(nameToRow[nodeVal[root]])
                 break
     return True

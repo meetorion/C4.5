@@ -1,0 +1,15 @@
+small no no normal 0
+small no no good 0
+small yes no good 1
+small yes yes normal 1
+small no no normal 0
+mid no no normal 0
+mid no no good 0
+mid yes yes good 1
+mid no yes nice 1
+mid no yes nice 1
+old no yes nice 1
+old no yes good 1
+old yes no good 1
+old yes no nice 1
+old no no normal 0
